@@ -24,8 +24,8 @@ $contentTypes = @{
     'avi'   = 'video/x-msvideo'
 }
 
-$webfiles = "C:\Users\matth\web_files"
-$port = 8080
+$webfiles = $env:WEB_FILES
+$port = $env:LISTEN_PORT
 
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://*:$port/")
