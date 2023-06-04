@@ -62,12 +62,12 @@ while ($true)
                 $extension = [System.IO.Path]::GetExtension($filepath)
                 if ($extension -in $binaryExtensions)
                 {
-                    $buffer = [System.IO.File]::ReadAllBytes($filePath)
+                    $content = Get-Content $filePath -Raw
+                    $buffer = [System.Text.Encoding]::UTF8.GetBytes($content)
                 }
                 else
                 {
-                    $content = Get-Content $filePath -Raw
-                    $buffer = [System.Text.Encoding]::UTF8.GetBytes($content)
+                    $buffer = [System.IO.File]::ReadAllBytes($filePath)
                 }
             }
             else
