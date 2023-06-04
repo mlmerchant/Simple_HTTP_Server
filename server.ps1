@@ -24,6 +24,9 @@ $contentTypes = @{
     'avi'   = 'video/x-msvideo'
 }
 
+$binaryExtensions = @('png', 'jpg', 'jpeg', 'gif', 'svg', 'bmp', 'ico', 'mp4', 'mov', 'avi')
+
+
 $webfiles = $env:WEB_FILES
 $port = $env:LISTEN_PORT
 
@@ -42,7 +45,7 @@ while ($true) {
         $localPath = $request.Url.LocalPath
         if ($localPath -eq '/') { $localPath = '/index.html' }
 
-        $filePath = [System.IO.Path]::GetFullPath("$webfiles$localPath")
+        $filePath = [System.IO.Path]::GetFullPath("$webfiles$localPath").TrimStart('.')
 
         Write-Host "Requested local path: $localPath"
         Write-Host "Constructed file path: $filePath"
@@ -50,10 +53,10 @@ while ($true) {
         if ($filePath.StartsWith($webfiles) -and (Test-Path $filePath)) {
         $response.ContentType = Get-ContentType $filePath
 
-        foreach ($extension in $contentTypes.Keys) {
-            if ($filePath -match "\.$extension$") {
+        $extension = [System.IO.Path]::GetExtension($filepath)
+
+        if ($extension -in $binaryExtensions) {
                 $buffer = [System.IO.File]::ReadAllBytes($filePath)
-                break
             } else {
                 $content = Get-Content $filePath -Raw
                 $buffer = [System.Text.Encoding]::UTF8.GetBytes($content)
