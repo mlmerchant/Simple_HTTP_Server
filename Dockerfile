@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:7
+FROM mcr.microsoft.com/powershell
 
 WORKDIR /app
 
